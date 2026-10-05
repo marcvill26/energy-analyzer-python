@@ -91,3 +91,28 @@ def find_total(text):
             total = float(total)
             
             return total            
+
+
+def analyzer_price(price):
+    if price < 0.12:
+        return 'Precio bajo'
+    elif price <= 0.18:
+        return 'Precio medio'
+    else:
+        return 'Precio alto'        
+
+    
+def calculate_other_costs(total, energy_cost):
+    other_costs = total - energy_cost
+    other_costs = round(other_costs,2)
+    return other_costs
+
+def calculate_energy_percentage(energy_cost,total):
+    percentage = (energy_cost / total) *100
+    percentage = round(percentage,2)
+    return percentage
+
+def calculate_other_cost_percentage(other_costs, total):
+    percentage = (other_costs / total) *100
+    percentage = round(percentage,2)
+    return percentage
