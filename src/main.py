@@ -22,6 +22,11 @@ energy_cost = calculate_energy_cost(consumption, price)
 power_p1 = find_power_p1(invoice_text)
 power_p2 = find_power_p2(invoice_text)
 total = find_total(invoice_text)
+price_category = analyzer_price(price)
+
+calculated_other_cost = calculate_other_costs(total, energy_cost)
+calculated_energy_percentage = calculate_energy_percentage(energy_cost,total)
+calculated_other_cost_percentage = calculate_other_cost_percentage(calculated_other_cost,total)
 
 price_category = analyzer_price(price)
 
@@ -56,3 +61,32 @@ invoice = {
 
 
 generate_report(invoice)
+
+invoice = {
+    'consumption_kwh': consumption,
+    'price_kwh': price,
+    'energy_cost': energy_cost,
+    'power_p1_kw': power_p1,
+    'power_p2_kw': power_p2,
+    'total': total,
+    'price_category': price_category,
+    
+    'other_costs': calculated_other_cost,
+    'energy_percentage':calculated_energy_percentage,
+    'other_cost_percentage':calculated_other_cost_percentage
+}
+print(invoice)
+
+print('Consumo encontrado:',consumption, 'KWh')
+print('Tipo de dato:', type(consumption))
+print('Precio encontrado:', price, '€/KWh')
+print('Tipo de dato:', type(price))
+print('Costo de energía encontrado:', energy_cost, '€')
+print('Potencia P1 encontrada:', power_p1, 'kW')
+print('Potencia P2 encontrada:', power_p2, 'kW')
+print('Total a pagar encontrado:', total, '€')
+print('Categoría de precio:', price_category)
+
+print('Otros costes:', calculated_other_cost, '€')
+print('Porcentaje destinado a energía',calculated_energy_percentage,'%')
+print('Porcentaje destinado a otros costes',calculated_other_cost_percentage,'%')
