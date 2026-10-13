@@ -10,19 +10,42 @@ from analyzer import calculate_other_costs
 from analyzer import calculate_energy_percentage
 from analyzer import calculate_other_cost_percentage
 from report import generate_report
+from analyzer import find_power_p1_cost
+from analyzer import find_power_p2_cost
+from analyzer import find_socilal_bonus_cost
+from analyzer import find_electricity_tax
+from analyzer import find_meter_rental_cost
+from analyzer import find_total_electricity
+from analyzer import calculate_total_electricity
+from analyzer import find_total_service
+from analyzer import find_iva
+from analyzer import calculate_invoice_total
+
+
 
 
 file_path = "invoices/Documento_Naturgy_5_.pdf"
 
 invoice_text = read_pdf(file_path)
 
+
+
 consumption = find_consumption(invoice_text)
 price = find_price(invoice_text)
 energy_cost = calculate_energy_cost(consumption, price)
 power_p1 = find_power_p1(invoice_text)
 power_p2 = find_power_p2(invoice_text)
+power_p1_cost = find_power_p1_cost(invoice_text)
+power_p2_cost = find_power_p2_cost(invoice_text)
+social_bonus_cost = find_socilal_bonus_cost(invoice_text)
+meter_rental_cost = find_meter_rental_cost(invoice_text)
+tax_electricity = find_electricity_tax(invoice_text)
+total_electricity = find_total_electricity(invoice_text)
 total = find_total(invoice_text)
-price_category = analyzer_price(price)
+total_services= find_total_service(invoice_text)
+iva = find_iva(invoice_text)
+calculated_invoice_total = calculate_invoice_total
+
 
 calculated_other_cost = calculate_other_costs(total, energy_cost)
 calculated_energy_percentage = calculate_energy_percentage(energy_cost,total)
@@ -30,19 +53,40 @@ calculated_other_cost_percentage = calculate_other_cost_percentage(calculated_ot
 
 price_category = analyzer_price(price)
 
-calculated_other_cost = calculate_other_costs(
-    total,
-    energy_cost
-)
-
-calculated_energy_percentage = calculate_energy_percentage(
+calculated_total_electricity = calculate_total_electricity(
     energy_cost,
-    total
+    power_p1_cost,
+    power_p2_cost,
+    social_bonus_cost,
+    tax_electricity,
+    meter_rental_cost
 )
 
-calculated_other_cost_percentage = calculate_other_cost_percentage(
-    calculated_other_cost,
-    total
+electricity_difference = round(
+    total_electricity - calculated_total_electricity,
+    2
+)
+
+electricity_validation = (
+    calculated_total_electricity == total_electricity
+)
+
+total_services = find_total_service(invoice_text)
+iva = find_iva(invoice_text)
+
+calculated_invoice_total = calculate_invoice_total(
+    total_electricity,
+    total_services,
+    iva
+)
+
+invoice_difference = round(
+    total - calculated_invoice_total,
+    2
+)
+
+invoice_validation = (
+    total == calculated_invoice_total
 )
 
 
@@ -52,41 +96,49 @@ invoice = {
     "energy_cost": energy_cost,
     "power_p1_kw": power_p1,
     "power_p2_kw": power_p2,
+    "power_p1_cost":power_p1_cost,
+    "power_p2_cost": power_p2_cost,
+    "social_bonus_cost":social_bonus_cost,
+    "tax_electricity": tax_electricity,
+    "meter_rental_cost":meter_rental_cost,
+    "total_electricity":total_electricity,
+    "total_electricity": total_electricity,
+    "calculated_total_electricity": calculated_total_electricity,
+    "electricity_difference": electricity_difference,
+    "electricity_validation": electricity_validation,
     "total": total,
     "price_category": price_category,
     "other_costs": calculated_other_cost,
     "energy_percentage": calculated_energy_percentage,
-    "other_cost_percentage": calculated_other_cost_percentage
+    "other_cost_percentage": calculated_other_cost_percentage,
+    "total_services": total_services,
+    "iva":iva,
+    "calculated_invoice_total": calculated_invoice_total,
+     "invoice_difference": invoice_difference,
+    "invoice_validation": invoice_validation
 }
 
+calculated_total_electricity = calculate_total_electricity(
+    energy_cost,
+    power_p1_cost,
+    power_p2_cost,
+    social_bonus_cost,
+    tax_electricity,
+    meter_rental_cost
+)
 
+total_electricity = find_total_electricity(invoice_text)
 generate_report(invoice)
 
-invoice = {
-    'consumption_kwh': consumption,
-    'price_kwh': price,
-    'energy_cost': energy_cost,
-    'power_p1_kw': power_p1,
-    'power_p2_kw': power_p2,
-    'total': total,
-    'price_category': price_category,
-    
-    'other_costs': calculated_other_cost,
-    'energy_percentage':calculated_energy_percentage,
-    'other_cost_percentage':calculated_other_cost_percentage
-}
-print(invoice)
+electricity_difference = round(
+    total_electricity - calculated_total_electricity,
+    2
+)
 
-print('Consumo encontrado:',consumption, 'KWh')
-print('Tipo de dato:', type(consumption))
-print('Precio encontrado:', price, '€/KWh')
-print('Tipo de dato:', type(price))
-print('Costo de energía encontrado:', energy_cost, '€')
-print('Potencia P1 encontrada:', power_p1, 'kW')
-print('Potencia P2 encontrada:', power_p2, 'kW')
-print('Total a pagar encontrado:', total, '€')
-print('Categoría de precio:', price_category)
+electricity_validation = (
+    calculated_total_electricity == total_electricity
+)
 
-print('Otros costes:', calculated_other_cost, '€')
-print('Porcentaje destinado a energía',calculated_energy_percentage,'%')
-print('Porcentaje destinado a otros costes',calculated_other_cost_percentage,'%')
+
+#print(invoice)
+
